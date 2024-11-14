@@ -1,0 +1,14 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Lint generated
+.ruff_cache/
+
+
+# Virtual environments
+.venv
