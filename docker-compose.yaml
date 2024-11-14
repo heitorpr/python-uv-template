@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: uv-template-db
+    ports:
+      - "${DB_PORT}"
+    volumes:
+      - uv-template-db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+  backend:
+    image: uv-template-backend:latest
+    build:
+      context: .
+    restart: always
+    container_name: uv-template-backend
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - ${APP_PORT}:8000
+    volumes:
+      - "./app:/app/app:delegated"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  uv-template-db-data:
