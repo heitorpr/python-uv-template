@@ -2,9 +2,12 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
+from sqlmodel import SQLModel
 
 from app.core.settings import settings
-from app.domain.models import SQLModel
+
+# ruff: noqa: F403
+from app.domain.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

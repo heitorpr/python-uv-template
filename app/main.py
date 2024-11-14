@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from app.domain.models.item import Item
+from app.domain.models import Item
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
