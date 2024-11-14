@@ -21,5 +21,5 @@ uv run pyright .
 # run migrations
 
 ```python
-PYTHONPATH=. uv run alembic revision --autogenerate -m "init schema"
+docker compose exec -it backend uv run alembic revision --autogenerate -m "init schema"
 ```
