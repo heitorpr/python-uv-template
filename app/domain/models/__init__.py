@@ -4,6 +4,4 @@ __all__ = [
     "Order",
 ]
 
-from .item import Item
-from .order import Order
-from .user import User
+from .example import Item, Order, User
