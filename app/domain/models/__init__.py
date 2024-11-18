@@ -1,7 +1,3 @@
-__all__ = [
-    "Item",
-    "User",
-    "Order",
-]
+__all__ = ["Team", "Hero", "Mission", "HeroMissionLink"]
 
-from .example import Item, Order, User
+from .hero_association import Hero, HeroMissionLink, Mission, Team

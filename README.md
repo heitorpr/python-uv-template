@@ -12,6 +12,14 @@ uv run pre-commit install -f
 uv run pre-commit install --hook-type commit-msg
 ```
 
+# setup venv
+
+```shell
+uv venv
+source .venv/bin/activate
+uv sync
+```
+
 # run project
 
 ```shell

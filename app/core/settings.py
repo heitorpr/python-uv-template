@@ -32,7 +32,7 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def db_dsn_aync(self) -> PostgresDsn:
+    def db_dsn_async(self) -> PostgresDsn:
         return MultiHostUrl.build(
             scheme="postgresql+asyncpg",
             username=self.db_user,
