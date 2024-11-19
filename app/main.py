@@ -3,12 +3,11 @@ from fastapi.responses import ORJSONResponse
 from sqlmodel import Session, create_engine, select
 
 from app.core.settings import settings
-from app.domain.models import Hero, HeroMissionLink, Mission, Team
+from app.domain.models import Hero, Team
+from app.domain.schemas.hero_association import HeroSchema
 
 app = FastAPI(default_response_class=ORJSONResponse)
-engine = create_engine(
-    str(settings.db_dsn_sync), echo=True, connect_args={"check_same_thread": False}
-)
+engine = create_engine(str(settings.db_dsn_sync), echo=True)
 
 
 def get_session():
@@ -26,7 +25,7 @@ async def read_root():
     summary="Create a hero",
     description="Create a hero with all the information",
     tags=["heroes"],
-    response_model=Hero,
+    response_model=HeroSchema,
     status_code=201,
 )
 async def create_hero(hero: Hero, session: Session = Depends(get_session)):
@@ -53,16 +52,12 @@ async def read_heroes(session: Session = Depends(get_session)):
     summary="Read a hero",
     description="Read a hero by ID",
     tags=["heroes"],
-    response_model=Hero,
+    response_model=HeroSchema,
     status_code=200,
 )
 async def read_hero(hero_id: int, session: Session = Depends(get_session)):
-    hero = session.get(Hero, hero_id)
-
-    if not hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
-
-    return hero
+    statement = select(Hero).where(Hero.id == hero_id)
+    return session.exec(statement).one()
 
 
 @app.put(
@@ -121,46 +116,6 @@ async def create_team(team: Team, session: Session = Depends(get_session)):
     return team
 
 
-@app.post(
-    "/missions/",
-    summary="Create a mission",
-    description="Create a mission with a description",
-    tags=["missions"],
-    response_model=Mission,
-    status_code=201,
-)
-async def create_mission(mission: Mission, session: Session = Depends(get_session)):
-    session.add(mission)
-    session.commit()
-    session.refresh(mission)
-    return mission
-
-
-@app.put(
-    "/missions/{mission_id}/heroes/{hero_id}",
-    summary="Assign a hero to a mission",
-    description="Assign a hero to a mission by ID",
-    tags=["missions"],
-    response_model=Mission,
-    status_code=200,
-)
-async def assign_hero_to_mission(
-    mission_id: int, hero_id: int, session: Session = Depends(get_session)
-):
-    mission = session.get(Mission, mission_id)
-    hero = session.get(Hero, hero_id)
-
-    if not mission or not hero:
-        raise HTTPException(status_code=404, detail="Mission or Hero not found")
-
-    hero_mission_link = HeroMissionLink(hero_id=hero_id, mission_id=mission_id)
-
-    session.add(hero_mission_link)
-    session.commit()
-    session.refresh(mission)
-    return mission
-
-
 @app.get(
     "/teams/{team_id}",
     summary="Read team",
@@ -176,20 +131,3 @@ async def read_team(team_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Team not found")
 
     return team
-
-
-@app.get(
-    "/missions/{mission_id}",
-    summary="Read mission",
-    description="Read a mission by ID",
-    tags=["missions"],
-    response_model=Mission,
-    status_code=200,
-)
-async def read_mission(mission_id: int, session: Session = Depends(get_session)):
-    mission = session.get(Mission, mission_id)
-
-    if not mission:
-        raise HTTPException(status_code=404, detail="Mission not found")
-
-    return mission

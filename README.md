@@ -43,3 +43,9 @@ docker compose exec -it backend uv run alembic upgrade head
 ```shell
 docker compose exec -it backend uv run alembic revision --autogenerate -m "init schema"
 ```
+
+# fix migrated created file permission
+
+```shell
+sudo chown -R heitorpr:heitorpr app/alembic/versions
+```
