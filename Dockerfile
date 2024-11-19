@@ -2,6 +2,13 @@ FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    graphviz \
+    libgraphviz-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install uv
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#installing-uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/

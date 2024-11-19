@@ -47,5 +47,5 @@ docker compose exec -it backend uv run alembic revision --autogenerate -m "init 
 # fix migrated created file permission
 
 ```shell
-sudo chown -R heitorpr:heitorpr app/alembic/versions
+sudo chown -R $USER:$USER app/alembic/versions
 ```

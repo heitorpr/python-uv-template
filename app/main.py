@@ -1,6 +1,7 @@
+from eralchemy import render_er
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import ORJSONResponse
-from sqlmodel import Session, create_engine, select
+from sqlmodel import Session, SQLModel, create_engine, select
 
 from app.core.settings import settings
 from app.domain.models import Hero, Mission, Team
@@ -168,3 +169,10 @@ def assign_hero_to_mission(mission_id: int, hero_id: int, session: Session = Dep
 
     session.refresh(mission)
     return mission
+
+
+# Generate the ER diagram
+
+target_metadata = SQLModel.metadata
+filename = "app/alembic/db_mer.png"
+render_er(target_metadata, filename)
