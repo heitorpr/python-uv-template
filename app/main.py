@@ -3,8 +3,8 @@ from fastapi.responses import ORJSONResponse
 from sqlmodel import Session, create_engine, select
 
 from app.core.settings import settings
-from app.domain.models import Hero, Team
-from app.domain.schemas.hero_association import HeroSchema
+from app.domain.models import Hero, Mission, Team
+from app.domain.schemas.hero_association import HeroSchema, MissionSchema
 
 app = FastAPI(default_response_class=ORJSONResponse)
 engine = create_engine(str(settings.db_dsn_sync), echo=True)
@@ -40,7 +40,7 @@ async def create_hero(hero: Hero, session: Session = Depends(get_session)):
     summary="Read heroes",
     description="Read all heroes",
     tags=["heroes"],
-    response_model=list[Hero],
+    response_model=list[HeroSchema],
     status_code=200,
 )
 async def read_heroes(session: Session = Depends(get_session)):
@@ -131,3 +131,40 @@ async def read_team(team_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Team not found")
 
     return team
+
+
+@app.post(
+    "/missions/",
+    summary="Create a mission",
+    description="Create a mission with a name and description",
+    tags=["missions"],
+    response_model=Mission,
+    status_code=201,
+)
+async def create_mission(mission: Mission, session: Session = Depends(get_session)):
+    session.add(mission)
+    session.commit()
+    session.refresh(mission)
+    return mission
+
+
+@app.put(
+    "/missions/{mission_id}/heroes/{hero_id}",
+    summary="Assign a hero to a mission",
+    description="Assign a hero to a mission by ID",
+    tags=["missions"],
+    response_model=MissionSchema,
+    status_code=200,
+)
+def assign_hero_to_mission(mission_id: int, hero_id: int, session: Session = Depends(get_session)):
+    hero = session.get(Hero, hero_id)
+    mission = session.get(Mission, mission_id)
+    if not hero or not mission:
+        raise HTTPException(status_code=404, detail="Hero or Mission not found")
+
+    mission.heroes.append(hero)
+    session.add(mission)
+    session.commit()
+
+    session.refresh(mission)
+    return mission
