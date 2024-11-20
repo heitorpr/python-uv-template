@@ -174,5 +174,5 @@ def assign_hero_to_mission(mission_id: int, hero_id: int, session: Session = Dep
 # Generate the ER diagram
 
 target_metadata = SQLModel.metadata
-filename = "app/alembic/db_mer.png"
+filename = "app/alembic/db_mer.md"
 render_er(target_metadata, filename)

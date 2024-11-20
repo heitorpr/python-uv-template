@@ -2,7 +2,7 @@ FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 
-# Instalar dependências do sistema
+# Deps to generate db schema
 RUN apt-get update && apt-get install -y \
     graphviz \
     libgraphviz-dev \
