@@ -11,6 +11,9 @@ class Settings(BaseSettings):
         env_ignore_empty=True,
     )
 
+    # API
+    api_v1_str: str = "/api/v1"
+
     # Database
     db_host: str = "localhost"
     db_name: str = "app"
