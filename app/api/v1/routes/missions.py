@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.api.deps import SessionDep
 from app.api.v1.schemas.missions import MissionSchema
+from app.core.deps import SessionDep
 from app.domain.models import Hero, Mission
 
 router = APIRouter()

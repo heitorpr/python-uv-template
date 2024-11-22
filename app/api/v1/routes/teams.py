@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.api.deps import SessionDep
+from app.core.deps import SessionDep
 from app.domain.models import Team
 
 router = APIRouter()

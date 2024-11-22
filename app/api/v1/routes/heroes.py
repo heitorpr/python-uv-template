@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
-from app.api.deps import SessionDep
 from app.api.v1.schemas.heroes import HeroSchema
+from app.core.deps import SessionDep
 from app.domain.models import Hero
 
 router = APIRouter()

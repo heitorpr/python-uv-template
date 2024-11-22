@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlmodel import select
 
-from app.api.deps import SessionDep
+from app.core.deps import SessionDep
 
 router = APIRouter()
 
