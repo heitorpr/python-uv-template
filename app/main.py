@@ -3,18 +3,13 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from sqlmodel import SQLModel
 
-from app.api import api_router
+from app.api.v1 import api_router as api_v1_router
 from app.core.settings import settings
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-
-app.include_router(api_router, prefix=settings.api_v1_str)
+app.include_router(api_v1_router, prefix=settings.api_v1_str)
 
 
 # Generate the ER diagram

@@ -23,7 +23,7 @@ uv sync
 # run project
 
 ```shell
-uv run fastapi dev --port 8003 app/main.py
+uv run fastapi dev --port 8000 app/main.py
 ```
 
 # run linters
