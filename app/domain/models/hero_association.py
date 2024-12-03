@@ -15,7 +15,7 @@ class HeroBase(SQLModel):
 
 
 class HeroCreate(HeroBase):
-    pass
+    team_id: int | None = Field(default=None)
 
 
 class HeroMissionLink(SQLModel, table=True):
