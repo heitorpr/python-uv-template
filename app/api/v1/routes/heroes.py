@@ -2,8 +2,9 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
 from app.api.v1.schemas.heroes import HeroSchema
-from app.core.deps import SessionDep
+from app.core.deps import HeroesServiceDep, SessionDep
 from app.domain.models import Hero
+from app.domain.models.hero_association import HeroCreate
 
 router = APIRouter()
 
@@ -16,11 +17,8 @@ router = APIRouter()
     response_model=HeroSchema,
     status_code=201,
 )
-async def create_hero(hero: Hero, session: SessionDep):
-    session.add(hero)
-    session.commit()
-    session.refresh(hero)
-    return hero
+async def create_hero(hero: HeroCreate, service: HeroesServiceDep):
+    return await service.create_hero(hero)
 
 
 @router.get(

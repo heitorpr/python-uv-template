@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from eralchemy import render_er
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse

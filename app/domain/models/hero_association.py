@@ -14,6 +14,10 @@ class HeroBase(SQLModel):
     age: int | None = None
 
 
+class HeroCreate(HeroBase):
+    pass
+
+
 class HeroMissionLink(SQLModel, table=True):
     hero_id: int = Field(default=None, primary_key=True, foreign_key="hero.id")
     mission_id: int = Field(default=None, primary_key=True, foreign_key="mission.id")
