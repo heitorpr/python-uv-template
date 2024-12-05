@@ -1,10 +1,8 @@
-from fastapi import APIRouter, HTTPException
-from sqlmodel import select
+from fastapi import APIRouter
 
-from app.api.v1.schemas.heroes import HeroSchema
-from app.core.deps import HeroesServiceDep, SessionDep
-from app.domain.models import Hero
-from app.domain.models.hero import HeroCreate
+from app.api.v1.schemas import HeroPublic
+from app.core.deps import HeroesServiceDep
+from app.domain.models.hero import HeroCreate, HeroUpdate
 
 router = APIRouter()
 
@@ -14,23 +12,11 @@ router = APIRouter()
     summary="Create a hero",
     description="Create a hero with all the information",
     tags=["heroes"],
-    response_model=HeroSchema,
+    response_model=HeroPublic,
     status_code=201,
 )
 async def create_hero(hero: HeroCreate, service: HeroesServiceDep):
-    return await service.create_hero(hero)
-
-
-@router.get(
-    "/",
-    summary="Read heroes",
-    description="Read all heroes",
-    tags=["heroes"],
-    response_model=list[HeroSchema],
-    status_code=200,
-)
-async def read_heroes(session: SessionDep):
-    return session.exec(select(Hero)).all()
+    return await service.create(hero)
 
 
 @router.get(
@@ -38,11 +24,11 @@ async def read_heroes(session: SessionDep):
     summary="Read a hero",
     description="Read a hero by ID",
     tags=["heroes"],
-    response_model=HeroSchema,
+    response_model=HeroPublic,
     status_code=200,
 )
 async def read_hero(hero_id: int, service: HeroesServiceDep):
-    return await service.read_hero(hero_id)
+    return await service.get(hero_id)
 
 
 @router.put(
@@ -50,22 +36,11 @@ async def read_hero(hero_id: int, service: HeroesServiceDep):
     summary="Update a hero",
     description="Update a hero by ID",
     tags=["heroes"],
-    response_model=Hero,
+    response_model=HeroPublic,
     status_code=200,
 )
-async def update_hero(hero_id: int, hero_data: Hero, session: SessionDep):
-    db_hero = session.get(Hero, hero_id)
-
-    if not db_hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
-
-    for key, value in hero_data.model_dump(exclude_unset=True).items():
-        setattr(db_hero, key, value)
-
-    session.add(db_hero)
-    session.commit()
-    session.refresh(db_hero)
-    return db_hero
+async def update_hero(hero_id: int, hero_data: HeroUpdate, service: HeroesServiceDep):
+    return await service.update(hero_id, hero_data)
 
 
 @router.delete(
@@ -75,12 +50,17 @@ async def update_hero(hero_id: int, hero_data: Hero, session: SessionDep):
     tags=["heroes"],
     status_code=204,
 )
-async def delete_hero(hero_id: int, session: SessionDep):
-    hero = session.get(Hero, hero_id)
+async def delete_hero(hero_id: int, service: HeroesServiceDep):
+    return await service.delete(hero_id)
 
-    if not hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
 
-    session.delete(hero)
-    session.commit()
-    return
+@router.put(
+    "/{hero_id}/assign-team/{team_id}",
+    summary="Assign a hero to a team",
+    description="Assign a hero to a team by ID",
+    tags=["heroes"],
+    response_model=HeroPublic,
+    status_code=200,
+)
+async def assign_hero_to_team(hero_id: int, team_id: int, service: HeroesServiceDep):
+    return await service.assign_team(hero_id, team_id)

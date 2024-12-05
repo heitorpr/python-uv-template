@@ -2,10 +2,40 @@ from sqlmodel import Field, SQLModel
 
 
 class HeroBase(SQLModel):
-    name: str
-    secret_name: str
-    age: int | None = None
+    name: str = Field(title="Hero name", description="Hero real name")
+    secret_name: str = Field(title="Hero secret name", description="Hero secret name")
+    age: int | None = Field(default=None, title="Hero age", description="Hero age")
+
+
+class Hero(HeroBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    team_id: int | None = Field(default=None, foreign_key="team.id")
+
+
+class HeroMissionLink(SQLModel, table=True):
+    hero_id: int = Field(
+        default=None,
+        title="Hero id",
+        description="Hero identification",
+        primary_key=True,
+        foreign_key="hero.id",
+    )
+    mission_id: int = Field(
+        default=None,
+        title="Mission id",
+        description="Mission identification",
+        primary_key=True,
+        foreign_key="mission.id",
+    )
 
 
 class HeroCreate(HeroBase):
-    team_id: int | None = Field(default=None)
+    team_id: int | None = Field(
+        default=None, title="Team ID", description="The ID of the team the hero is in"
+    )
+
+
+class HeroUpdate(HeroBase):
+    team_id: int | None = Field(
+        default=None, title="Team ID", description="The ID of the team the hero is in"
+    )

@@ -1,3 +1,5 @@
-__all__ = ["Hero", "Team", "Mission"]
+__all__ = ["Hero", "Team", "Mission", "HeroMissionLink"]
 
-from .hero_association import Hero, Mission, Team
+from .hero import Hero, HeroMissionLink
+from .mission import Mission
+from .team import Team

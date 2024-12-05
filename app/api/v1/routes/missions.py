@@ -1,8 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
-from app.api.v1.schemas.missions import MissionSchema
 from app.core.deps import SessionDep
-from app.domain.models import Hero, Mission
+from app.domain.models import Mission
 
 router = APIRouter()
 
@@ -18,27 +17,5 @@ router = APIRouter()
 async def create_mission(mission: Mission, session: SessionDep):
     session.add(mission)
     session.commit()
-    session.refresh(mission)
-    return mission
-
-
-@router.put(
-    "/{mission_id}/heroes/{hero_id}",
-    summary="Assign a hero to a mission",
-    description="Assign a hero to a mission by ID",
-    tags=["missions"],
-    response_model=MissionSchema,
-    status_code=200,
-)
-def assign_hero_to_mission(mission_id: int, hero_id: int, session: SessionDep):
-    hero = session.get(Hero, hero_id)
-    mission = session.get(Mission, mission_id)
-    if not hero or not mission:
-        raise HTTPException(status_code=404, detail="Hero or Mission not found")
-
-    mission.heroes.append(hero)
-    session.add(mission)
-    session.commit()
-
     session.refresh(mission)
     return mission

@@ -1,15 +1,6 @@
 <!--
 
 classDiagram
-class team{
- *INTEGER id NOT NULL
-   VARCHAR headquarters NOT NULL
-   VARCHAR name NOT NULL
-}
-class heromissionlink{
- *INTEGER hero_id NOT NULL
-   *INTEGER mission_id NOT NULL
-}
 class hero{
  *INTEGER id NOT NULL
    INTEGER age
@@ -17,14 +8,23 @@ class hero{
    VARCHAR secret_name NOT NULL
    INTEGER team_id
 }
+class heromissionlink{
+ *INTEGER hero_id NOT NULL
+   *INTEGER mission_id NOT NULL
+}
 class mission{
  *INTEGER id NOT NULL
    VARCHAR description NOT NULL
    VARCHAR name NOT NULL
 }
-mission "1" -- "0..n" heromissionlink
-hero "1" -- "0..n" heromissionlink
+class team{
+ *INTEGER id NOT NULL
+   VARCHAR headquarters NOT NULL
+   VARCHAR name NOT NULL
+}
 team "0..1" -- "0..n" hero
+hero "1" -- "0..n" heromissionlink
+mission "1" -- "0..n" heromissionlink
 
 -->
-![](https://mermaid.ink/img/Y2xhc3NEaWFncmFtCmNsYXNzIHRlYW17CiAqSU5URUdFUiBpZCBOT1QgTlVMTAogICBWQVJDSEFSIGhlYWRxdWFydGVycyBOT1QgTlVMTAogICBWQVJDSEFSIG5hbWUgTk9UIE5VTEwKfQpjbGFzcyBoZXJvbWlzc2lvbmxpbmt7CiAqSU5URUdFUiBoZXJvX2lkIE5PVCBOVUxMCiAgICpJTlRFR0VSIG1pc3Npb25faWQgTk9UIE5VTEwKfQpjbGFzcyBoZXJvewogKklOVEVHRVIgaWQgTk9UIE5VTEwKICAgSU5URUdFUiBhZ2UKICAgVkFSQ0hBUiBuYW1lIE5PVCBOVUxMCiAgIFZBUkNIQVIgc2VjcmV0X25hbWUgTk9UIE5VTEwKICAgSU5URUdFUiB0ZWFtX2lkCn0KY2xhc3MgbWlzc2lvbnsKICpJTlRFR0VSIGlkIE5PVCBOVUxMCiAgIFZBUkNIQVIgZGVzY3JpcHRpb24gTk9UIE5VTEwKICAgVkFSQ0hBUiBuYW1lIE5PVCBOVUxMCn0KbWlzc2lvbiAiMSIgLS0gIjAuLm4iIGhlcm9taXNzaW9ubGluawpoZXJvICIxIiAtLSAiMC4ubiIgaGVyb21pc3Npb25saW5rCnRlYW0gIjAuLjEiIC0tICIwLi5uIiBoZXJv)
+![](https://mermaid.ink/img/Y2xhc3NEaWFncmFtCmNsYXNzIGhlcm97CiAqSU5URUdFUiBpZCBOT1QgTlVMTAogICBJTlRFR0VSIGFnZQogICBWQVJDSEFSIG5hbWUgTk9UIE5VTEwKICAgVkFSQ0hBUiBzZWNyZXRfbmFtZSBOT1QgTlVMTAogICBJTlRFR0VSIHRlYW1faWQKfQpjbGFzcyBoZXJvbWlzc2lvbmxpbmt7CiAqSU5URUdFUiBoZXJvX2lkIE5PVCBOVUxMCiAgICpJTlRFR0VSIG1pc3Npb25faWQgTk9UIE5VTEwKfQpjbGFzcyBtaXNzaW9uewogKklOVEVHRVIgaWQgTk9UIE5VTEwKICAgVkFSQ0hBUiBkZXNjcmlwdGlvbiBOT1QgTlVMTAogICBWQVJDSEFSIG5hbWUgTk9UIE5VTEwKfQpjbGFzcyB0ZWFtewogKklOVEVHRVIgaWQgTk9UIE5VTEwKICAgVkFSQ0hBUiBoZWFkcXVhcnRlcnMgTk9UIE5VTEwKICAgVkFSQ0hBUiBuYW1lIE5PVCBOVUxMCn0KdGVhbSAiMC4uMSIgLS0gIjAuLm4iIGhlcm8KaGVybyAiMSIgLS0gIjAuLm4iIGhlcm9taXNzaW9ubGluawptaXNzaW9uICIxIiAtLSAiMC4ubiIgaGVyb21pc3Npb25saW5r)

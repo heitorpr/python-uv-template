@@ -1,3 +1,4 @@
-__all__ = ["HeroesService"]
+__all__ = ["HeroesService", "TeamsService"]
 
 from .heroes import HeroesService
+from .teams import TeamsService
