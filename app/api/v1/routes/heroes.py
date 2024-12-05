@@ -4,7 +4,7 @@ from sqlmodel import select
 from app.api.v1.schemas.heroes import HeroSchema
 from app.core.deps import HeroesServiceDep, SessionDep
 from app.domain.models import Hero
-from app.domain.models.hero_association import HeroCreate
+from app.domain.models.hero import HeroCreate
 
 router = APIRouter()
 
@@ -41,9 +41,8 @@ async def read_heroes(session: SessionDep):
     response_model=HeroSchema,
     status_code=200,
 )
-async def read_hero(hero_id: int, session: SessionDep):
-    statement = select(Hero).where(Hero.id == hero_id)
-    return session.exec(statement).one()
+async def read_hero(hero_id: int, service: HeroesServiceDep):
+    return await service.read_hero(hero_id)
 
 
 @router.put(

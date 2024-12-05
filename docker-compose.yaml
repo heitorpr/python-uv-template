@@ -19,6 +19,8 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
+    networks:
+      - uv-template-net
   backend:
     image: uv-template-backend:latest
     build:
@@ -35,6 +37,35 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - uv-template-net
+  pgadmin:
+    image: dpage/pgadmin4
+    profiles: [debug, pgadmin]
+    container_name: uv-template-pgadmin
+    restart: always
+    ports:
+      - 5050:80
+    volumes:
+      - ./observability/pgadmin/pgadmin_servers.json:/pgadmin4/servers.json
+      - uv-template-pgadmin-data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@uv.com
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    depends_on:
+      db:
+        condition: service_healthy
+    user: root
+    networks:
+      - uv-template-net
 
 volumes:
   uv-template-db-data:
+  uv-template-pgadmin-data:
+
+
+networks:
+  uv-template-net:
+    driver: bridge

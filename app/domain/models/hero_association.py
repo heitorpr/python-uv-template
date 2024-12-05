@@ -1,21 +1,15 @@
 from sqlmodel import Field, Relationship, SQLModel
 
+from .hero import HeroBase
+from .mission import MissionBase
+from .team import TeamBase
 
-class Team(SQLModel, table=True):
+
+class Team(TeamBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     headquarters: str
     heroes: list["Hero"] = Relationship(back_populates="team")
-
-
-class HeroBase(SQLModel):
-    name: str
-    secret_name: str
-    age: int | None = None
-
-
-class HeroCreate(HeroBase):
-    team_id: int | None = Field(default=None)
 
 
 class HeroMissionLink(SQLModel, table=True):
@@ -28,11 +22,6 @@ class Hero(HeroBase, table=True):
     team_id: int | None = Field(default=None, foreign_key="team.id")
     team: Team | None = Relationship(back_populates="heroes")
     missions: list["Mission"] = Relationship(back_populates="heroes", link_model=HeroMissionLink)
-
-
-class MissionBase(SQLModel):
-    name: str
-    description: str
 
 
 class Mission(MissionBase, table=True):
