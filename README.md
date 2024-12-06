@@ -49,3 +49,11 @@ docker compose exec -it backend uv run alembic revision --autogenerate -m "init 
 ```shell
 sudo chown -R $USER:$USER app/alembic/versions
 ```
+
+# update all dependencies
+
+```shell
+rm uv.lock
+uv lock
+uv sync
+```

@@ -15,7 +15,7 @@ async def read_root():
 @router.get("/healthz")
 async def healthcheck(session: SessionDep):
     """Healthcheck API Operation."""
-    result = session.exec(select(1)).first()
+    result = (await session.execute(select(1))).first()
 
     if result is None:
         return {
