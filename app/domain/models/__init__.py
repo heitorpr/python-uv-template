@@ -1,4 +1,4 @@
-__all__ = ["Hero", "Team", "Mission", "HeroMissionLink"]
+__all__ = ["Hero", "HeroMissionLink", "Mission", "Team"]
 
 from .hero import Hero, HeroMissionLink
 from .mission import Mission

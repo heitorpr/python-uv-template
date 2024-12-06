@@ -1,5 +1,4 @@
 from pydantic import PostgresDsn, computed_field
-from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,7 +23,7 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def db_dsn_sync(self) -> PostgresDsn:
-        return MultiHostUrl.build(
+        return PostgresDsn.build(
             scheme="postgresql+psycopg",
             username=self.db_user,
             password=self.db_password,
@@ -36,7 +35,7 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def db_dsn_async(self) -> PostgresDsn:
-        return MultiHostUrl.build(
+        return PostgresDsn.build(
             scheme="postgresql+asyncpg",
             username=self.db_user,
             password=self.db_password,

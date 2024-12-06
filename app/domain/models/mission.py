@@ -7,4 +7,8 @@ class MissionBase(SQLModel):
 
 
 class Mission(MissionBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
+
+
+class MissionCreate(MissionBase):
+    pass

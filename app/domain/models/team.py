@@ -7,9 +7,7 @@ class TeamBase(SQLModel):
 
 
 class Team(TeamBase, table=True):
-    id: int | None = Field(
-        default=None, title="Team id", description="Team identification", primary_key=True
-    )
+    id: int = Field(title="Team id", description="Team identification", primary_key=True)
 
 
 class TeamCreate(TeamBase):

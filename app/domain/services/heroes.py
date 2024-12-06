@@ -1,8 +1,7 @@
 from app.api.v1.schemas import HeroPublic
 from app.domain.models import Hero
 from app.domain.models.hero import HeroCreate, HeroUpdate
-from app.domain.repositories import HeroesRepository
-from app.domain.repositories.teams import TeamsRepository
+from app.domain.repositories import HeroesRepository, TeamsRepository
 
 
 class HeroesService:

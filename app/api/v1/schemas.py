@@ -12,4 +12,4 @@ class TeamPublic(TeamBase):
 
 
 class MissionPublic(MissionBase):
-    heroes: list[HeroPublic] = []
+    heroes: list[HeroBase] = []

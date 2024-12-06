@@ -8,7 +8,7 @@ class HeroBase(SQLModel):
 
 
 class Hero(HeroBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
     team_id: int | None = Field(default=None, foreign_key="team.id")
 
 

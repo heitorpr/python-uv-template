@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from app.domain.models import Hero
+from app.domain.models import Hero, HeroMissionLink
 from app.domain.models.hero import HeroCreate, HeroUpdate
 
 
@@ -23,6 +23,13 @@ class HeroesRepository:
     async def get_from_team(self, team_id: int) -> list[Hero]:
         return list(self.db.exec(select(Hero).where(Hero.team_id == team_id)).all())
 
+    async def get_from_mission(self, mission_id: int) -> list[Hero]:
+        return list(
+            self.db.exec(
+                select(Hero).join(HeroMissionLink).where(HeroMissionLink.mission_id == mission_id)
+            ).all()
+        )
+
     async def update(self, hero_id: int, hero_data: HeroUpdate) -> Hero:
         hero = await self.get(hero_id)
 
@@ -39,3 +46,18 @@ class HeroesRepository:
         self.db.delete(hero)
         self.db.commit()
         return hero
+
+    async def assign_to_mission(self, hero_id: int, mission_id: int):
+        link = self.db.exec(
+            select(HeroMissionLink)
+            .where(HeroMissionLink.hero_id == hero_id)
+            .where(HeroMissionLink.mission_id == mission_id)
+        ).one_or_none()
+
+        if not link:
+            link = HeroMissionLink(hero_id=hero_id, mission_id=mission_id)
+
+            self.db.begin_nested()
+
+            self.db.add(link)
+            self.db.commit()
