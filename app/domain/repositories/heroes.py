@@ -18,6 +18,14 @@ class HeroesRepository:
 
         return hero
 
+    async def create_list(self, hero_create_list: list[HeroCreate]) -> list[Hero]:
+        heroes = [Hero(**hero.model_dump()) for hero in hero_create_list]
+
+        self.db.add_all(heroes)
+        await self.db.commit()
+
+        return heroes
+
     async def get(self, hero_id: int) -> Hero:
         result = await self.db.execute(select(Hero).where(Hero.id == hero_id))
         return result.scalar_one()

@@ -36,7 +36,7 @@ def upgrade() -> None:
         sa.Column("headquarters", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(op.f("ix_team_name"), "team", ["name"], unique=False)
+    op.create_index(op.f("ix_team_name"), "team", ["name"], unique=True)
     op.create_table(
         "hero",
         sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),

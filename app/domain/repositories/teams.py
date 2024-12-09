@@ -18,6 +18,14 @@ class TeamsRepository:
 
         return team
 
+    async def create_list(self, team_create_list: list[TeamCreate]) -> list[Team]:
+        teams = [Team(**team.model_dump()) for team in team_create_list]
+
+        self.db.add_all(teams)
+        await self.db.commit()
+
+        return teams
+
     async def get(self, team_id: int) -> Team:
         result = await self.db.execute(select(Team).where(Team.id == team_id))
         return result.scalar_one()
