@@ -57,10 +57,12 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["hero_id"],
             ["hero.id"],
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["mission_id"],
             ["mission.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("hero_id", "mission_id"),
     )

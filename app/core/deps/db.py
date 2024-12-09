@@ -1,13 +1,14 @@
-from collections.abc import Generator
+from collections.abc import AsyncGenerator
 
-from sqlalchemy import create_engine
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.settings import settings
 
-engine = create_engine(str(settings.db_dsn_sync), echo=True)
+async_engine = create_async_engine(str(settings.db_dsn_async), echo=True)
+
+AsyncSessionLocal = async_sessionmaker(bind=async_engine, expire_on_commit=False)
 
 
-def get_session() -> Generator[Session, None, None]:
-    with Session(engine) as session:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with AsyncSessionLocal() as session:
         yield session
