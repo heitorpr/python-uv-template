@@ -12,6 +12,7 @@ from app.core.settings import settings
 
 # Logging
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
