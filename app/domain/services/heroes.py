@@ -17,6 +17,13 @@ class HeroesService:
         return HeroPublic(**{**hero.model_dump(), "team": team.model_dump() if team else None})
 
     async def create(self, hero_create: HeroCreate) -> HeroPublic:
+        if hero_create.team_id and hero_create.team:
+            raise ValueError("You can't pass both team_id and team")
+
+        if hero_create.team:
+            team = await self.team_repository.create(hero_create.team)
+            hero_create.team_id = team.id
+
         hero = await self.hero_repository.create(hero_create)
         return await self._parse_to_public(hero)
 

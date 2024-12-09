@@ -1,5 +1,7 @@
 from sqlmodel import Field, SQLModel
 
+from app.domain.models.team import TeamCreate
+
 
 class HeroBase(SQLModel):
     name: str = Field(title="Hero name", description="Hero real name")
@@ -32,6 +34,11 @@ class HeroMissionLink(SQLModel, table=True):
 class HeroCreate(HeroBase):
     team_id: int | None = Field(
         default=None, title="Team ID", description="The ID of the team the hero is in"
+    )
+    team: TeamCreate | None = Field(
+        default=None,
+        title="Team",
+        description="The team the hero is in, it will be created together",
     )
 
 
