@@ -57,3 +57,15 @@ rm uv.lock
 uv lock
 uv sync
 ```
+
+# list outdated libs
+
+```shell
+uv run pip list --outdated
+```
+
+# run ipython
+
+```shell
+uv run ipython -i src/ipython_setup.py
+```
