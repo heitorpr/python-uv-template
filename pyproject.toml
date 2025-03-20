@@ -3,25 +3,26 @@ name = "app"
 version = "0.1.0"
 description = "My python setup project"
 readme = "README.md"
-requires-python = ">=3.12, <4.0"
+requires-python = ">=3.13, <4.0"
 dependencies = [
-    "alembic>=1.14.0",
+    "alembic>=1.15.1",
     "asyncpg>=0.30.0",
-    "fastapi[standard]>=0.115.5",
-    "orjson>=3.10.11",
-    "psycopg[binary]>=3.2.3",
-    "pydantic-settings>=2.6.1",
-    "pydantic>=2.9.2",
-    "sqlmodel>=0.0.22",
+    "fastapi[standard]>=0.115.11",
+    "orjson>=3.10.15",
+    "psycopg[binary]>=3.2.6",
+    "pydantic-settings>=2.8.1",
+    "pydantic>=2.10.6",
+    "sqlmodel>=0.0.24",
 ]
 
 [dependency-groups]
 dev = [
     "eralchemy[graphviz]>=1.5.0",
-    "pre-commit>=4.0.1",
-    "pyright>=1.1.389",
-    "pytest>=8.3.3",
-    "ruff>=0.7.3",
+    "ipython>=9.0.2",
+    "pre-commit>=4.2.0",
+    "pyright>=1.1.397",
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
 ]
 
 [tool.pyright]

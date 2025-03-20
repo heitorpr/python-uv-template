@@ -4,14 +4,6 @@
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-
-# setup pre-commit
-
-```shell
-uv run pre-commit install -f
-uv run pre-commit install --hook-type commit-msg
-```
-
 # setup venv
 
 ```shell
@@ -20,10 +12,18 @@ source .venv/bin/activate
 uv sync
 ```
 
+
+# setup pre-commit
+
+```shell
+uv run pre-commit install -f
+uv run pre-commit install --hook-type commit-msg
+```
+
 # run project
 
 ```shell
-uv run fastapi dev --port 8000 app/main.py
+uv run fastapi dev --port 8000 src/main.py
 ```
 
 # run linters
@@ -47,7 +47,7 @@ docker compose exec -it backend uv run alembic revision --autogenerate -m "init 
 # fix migrated created file permission
 
 ```shell
-sudo chown -R $USER:$USER app/alembic/versions
+sudo chown -R $USER:$USER src/alembic/versions
 ```
 
 # update all dependencies

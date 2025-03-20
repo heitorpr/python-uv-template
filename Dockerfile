@@ -1,38 +1,54 @@
-FROM python:3.12-slim-bookworm
+## ------------------------------- Builder Stage ------------------------------ ##
+FROM python:3.13-bookworm AS builder
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    graphviz \
+    build-essential && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Download the latest installer, install it and then remove it
+ADD https://astral.sh/uv/install.sh /install.sh
+RUN chmod -R 655 /install.sh && /install.sh && rm /install.sh
+
+# Set up the UV environment path correctly
+ENV PATH="/root/.local/bin:${PATH}"
 
 WORKDIR /app
 
-# Deps to generate db schema
-RUN apt-get update && apt-get install -y \
-    graphviz \
-    libgraphviz-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+COPY ./pyproject.toml .
 
-# Install uv
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#installing-uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv sync
+
+## ------------------------------- Production Stage ------------------------------ ##
+FROM python:3.13-slim-bookworm AS production
+
+# The following secrets are available during build time
+RUN --mount=type=secret,id=DB_PASSWORD \
+--mount=type=secret,id=DB_USER \
+--mount=type=secret,id=DB_NAME \
+--mount=type=secret,id=DB_HOST \
+--mount=type=secret,id=DB_PORT \
+DB_PASSWORD=/run/secrets/DB_PASSWORD \
+DB_USER=$(cat /run/secrets/DB_USER) \
+DB_NAME=$(cat /run/secrets/DB_NAME) \
+DB_HOST=$(cat /run/secrets/DB_HOST) \
+DB_PORT=$(cat /run/secrets/DB_PORT)
+
+RUN --mount=type=secret,id=secret-key,target=secrets.json
+
+RUN useradd --create-home appuser
+USER appuser
+
+WORKDIR /app
+
+COPY /src src
+COPY --from=builder /app/.venv .venv
+
+# Set up environment variables for production
 ENV PATH="/app/.venv/bin:$PATH"
-ENV UV_COMPILE_BYTECODE=1
 
-# uv Cache
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#caching
-ENV UV_LINK_MODE=copy
+# Expose the specified port for FastAPI
+EXPOSE $PORT
 
-# Install dependencies
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project
-
-ENV PYTHONPATH=/app
-COPY ./pyproject.toml ./uv.lock ./alembic.ini /app/
-
-COPY ./app /app/app
-
-# Uv sync
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Start the application with Uvicorn in production mode, using environment variable references
+CMD ["uvicorn", "src.main:app", "--log-level", "info", "--host", "0.0.0.0" , "--port", "8000"]
